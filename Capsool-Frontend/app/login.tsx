@@ -4,10 +4,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  Alert,
+  StyleSheet,
+  Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 
@@ -15,37 +15,67 @@ export default function LoginScreen() {
   const [mobile, setMobile] = useState('');
   const router = useRouter();
 
-  const handleSendOTP = (event: React.FormEvent) => {
-    event.preventDefault(); // Prevent the default form submission behavior
-    
+  const handleSendOTP = () => {
     if (mobile.length === 10) {
-      // Navigate to OTP screen
       router.push('/otp');
     } else {
-      Alert.alert('Invalid Number', 'Please enter a valid 10-digit mobile number');
+      alert('Please enter a valid 10-digit mobile number');
     }
   };
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <Text style={styles.title}>Enter your mobile number</Text>
+      <View style={styles.innerContainer}>
+        {/* Logo */}
+        <Image
+          source={require('@/assets/images/logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="10-digit Mobile Number"
-        keyboardType="phone-pad"
-        maxLength={10}
-        value={mobile}
-        onChangeText={setMobile}
-      />
+        {/* Welcome Text */}
+        <Text style={styles.welcomeText}>Welcome to Capsool Partner</Text>
 
-      {/* Prevent default form submission */}
-      <TouchableOpacity style={styles.button} onPress={handleSendOTP}>
-        <Text style={styles.buttonText}>Send OTP</Text>
-      </TouchableOpacity>
+        {/* White Card */}
+        <View style={styles.card}>
+          {/* Phone Number Input */}
+          <Text style={styles.label}>Phone Number</Text>
+          <View style={styles.phoneInputContainer}>
+            <View style={styles.countryCodeBox}>
+              <Text style={styles.countryCodeText}>+91</Text>
+            </View>
+            <TextInput
+              style={styles.phoneInput}
+              placeholder="Enter phone number"
+              keyboardType="phone-pad"
+              maxLength={10}
+              value={mobile}
+              onChangeText={setMobile}
+            />
+          </View>
+
+          {/* Send OTP Button */}
+          <TouchableOpacity style={styles.button} onPress={handleSendOTP}>
+            <Text style={styles.buttonText}>Send Verification Code</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Footer */}
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>
+            Need help? <Text style={styles.footerLink}>Contact Support</Text>
+          </Text>
+
+          <View style={styles.footerLinksRow}>
+            <Text style={styles.footerText}>Terms of Service</Text>
+            <View style={styles.dot} />
+            <Text style={styles.footerText}>Privacy Policy</Text>
+          </View>
+        </View>
+      </View>
     </KeyboardAvoidingView>
   );
 }
@@ -53,33 +83,100 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f5f5f5', // Light grey background
+  },
+  innerContainer: {
+    flex: 1,
     justifyContent: 'center',
-    padding: 24,
-    backgroundColor: '#fff',
+    paddingHorizontal: 24,
+    paddingBottom: 24,
   },
-  title: {
-    fontSize: 22,
-    fontWeight: '600',
+  logo: {
+    width: 80,
+    height: 80,
+    alignSelf: 'center',
     marginBottom: 16,
-    textAlign: 'center',
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#999',
-    borderRadius: 8,
-    padding: 12,
+  welcomeText: {
+    textAlign: 'center',
     fontSize: 16,
+    color: '#555',
+    marginBottom: 24,
+    fontWeight: '400',
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 8,
+    color: '#000',
+  },
+  phoneInputContainer: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    overflow: 'hidden',
     marginBottom: 24,
   },
+  countryCodeBox: {
+    backgroundColor: '#f5f5f5',
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  countryCodeText: {
+    fontSize: 16,
+    color: '#000',
+  },
+  phoneInput: {
+    flex: 1,
+    paddingHorizontal: 12,
+    fontSize: 16,
+    color: '#000',
+  },
   button: {
-    backgroundColor: '#0084ff',
-    paddingVertical: 14,
+    backgroundColor: '#000',
+    paddingVertical: 16,
     borderRadius: 8,
+    marginTop: 8,
   },
   buttonText: {
     color: '#fff',
+    textAlign: 'center',
     fontSize: 17,
     fontWeight: '500',
-    textAlign: 'center',
+  },
+  footer: {
+    marginTop: 32,
+    alignItems: 'center',
+  },
+  footerText: {
+    color: '#555',
+    fontSize: 14,
+  },
+  footerLink: {
+    color: '#000',
+    fontWeight: '600',
+  },
+  footerLinksRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#000',
+    marginHorizontal: 8,
   },
 });
